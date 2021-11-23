@@ -118,6 +118,13 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+        notes.setRecipe(this);  // Bidirectional Relationship
+    }
+
+    public Recipe addIngredient(Ingredient ingredient) {
+        ingredient.setRecipe(this); // Bidrectional Relationship
+        this.ingredients.add(ingredient);
+        return this;
     }
 
     public Set<Ingredient> getIngredients() {
