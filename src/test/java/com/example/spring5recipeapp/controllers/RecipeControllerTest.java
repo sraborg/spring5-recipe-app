@@ -33,9 +33,11 @@ class RecipeControllerTest {
     }
     @BeforeEach
     void setUp() {
+        recipeController = new RecipeController(recipeService);
+
         mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
-        recipeController = new RecipeController(recipeService);
+
     }
 
     @Test

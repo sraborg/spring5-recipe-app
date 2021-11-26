@@ -51,7 +51,7 @@
                                 <!--/*@thymeVar id="recipe" type="spring5recipeapp.domain.Recipe"*/-->
                                 <td th:text="${recipe.id}"></td>
                                 <td th:text="${recipe.description}"></td>
-                                <td><a href="#" th:href="@{'/recipes/show' + ${recipe.id}}">View</a> </td>
+                                <td><a href="#" th:href="@{'/recipe/show/' + ${recipe.id}}">View</a> </td>
                             </tr>
                             </tbody>
                         </table>

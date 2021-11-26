@@ -5,6 +5,7 @@ import com.example.spring5recipeapp.repositories.RecipeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -27,6 +28,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe findById(Long id) {
-        return null;
+        Optional<Recipe> recipe = recipeRepository.findById(id);
+        return recipe.orElse(null);
     }
 }

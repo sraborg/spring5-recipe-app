@@ -1,5 +1,6 @@
 package com.example.spring5recipeapp.controllers;
 
+import com.example.spring5recipeapp.domain.Recipe;
 import com.example.spring5recipeapp.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ public class RecipeController {
 
     @RequestMapping("/recipe/show/{id}")
     public String showById(@PathVariable String id, Model model) {
-        return null;
+        model.addAttribute("recipe", recipeService.findById(Long.parseLong(id)));
+        return "/recipe/show";
     }
 }
