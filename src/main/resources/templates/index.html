@@ -40,15 +40,18 @@
                             <tr th:remove="all">
                                 <td>1</td>
                                 <td>Tasty Goodness</td>
+                                <td><a href="#">View</a> </td>
                             </tr>
                             <tr th:remove="all">
                                 <td>2</td>
                                 <td>Tasty Goodness</td>
+                                <td><a href="#">View</a> </td>
                             </tr>
                             <tr th:each="recipe : ${recipes}">
                                 <!--/*@thymeVar id="recipe" type="spring5recipeapp.domain.Recipe"*/-->
                                 <td th:text="${recipe.id}"></td>
                                 <td th:text="${recipe.description}"></td>
+                                <td><a href="#" th:href="@{'/recipes/show' + ${recipe.id}}">View</a> </td>
                             </tr>
                             </tbody>
                         </table>
