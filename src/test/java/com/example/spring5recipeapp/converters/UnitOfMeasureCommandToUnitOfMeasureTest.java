@@ -14,16 +14,13 @@ class UnitOfMeasureCommandToUnitOfMeasureTest {
     private final String DESCRIPTION = "description";
     private final Long ID = 1L;
 
-    private UnitOfMeasureCommandToUnitOfMeasure converter;
+    private final UnitOfMeasureCommandToUnitOfMeasure converter = new UnitOfMeasureCommandToUnitOfMeasure();
 
-    @BeforeEach
-    void setUp() {
-        converter = new UnitOfMeasureCommandToUnitOfMeasure();
-    }
 
     @Test
-    void convert() throws Exception {
+    void convert() {
 
+        // Given
         UnitOfMeasureCommand command = new UnitOfMeasureCommand();
         command.setId(ID);
         command.setDescription(DESCRIPTION);
@@ -39,7 +36,7 @@ class UnitOfMeasureCommandToUnitOfMeasureTest {
     }
 
     @Test
-    void convertEmptyObject() throws Exception {
+    void convertEmptyObject() {
 
         // When
         UnitOfMeasure uom = converter.convert(new UnitOfMeasureCommand());
@@ -50,7 +47,7 @@ class UnitOfMeasureCommandToUnitOfMeasureTest {
     }
 
     @Test
-    void convertNullObject() throws Exception {
+    void convertNullObject() {
 
         // When
         UnitOfMeasure uom = converter.convert(null);

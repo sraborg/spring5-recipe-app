@@ -13,12 +13,8 @@ class UnitOfMeasureToUnitOfMeasureCommandTest {
     private final String DESCRIPTION = "description";
     private final Long ID = 1L;
 
-    private UnitOfMeasureToUnitOfMeasureCommand converter;
+    private final UnitOfMeasureToUnitOfMeasureCommand converter = new UnitOfMeasureToUnitOfMeasureCommand();
 
-    @BeforeEach
-    void setUp() {
-        converter = new UnitOfMeasureToUnitOfMeasureCommand();
-    }
 
     @Test
     void convert() {
