@@ -19,11 +19,12 @@ public class RecipeCommand {
     private Integer prepTime;
     private Integer cookTime;
     private Integer servings;
+    private String source;
     private String url;
     private String directions;
-    private Set<IngredientCommand> ingredientCommands = new HashSet<>();
+    private Set<IngredientCommand> ingredients = new HashSet<>();
     private Byte[] image;
     private Difficulty difficulty;
-    private NotesCommand notesCommand;
-    private Set<CategoryCommand> categoryCommands = new HashSet<>();
+    private NotesCommand notes;
+    private Set<CategoryCommand> category = new HashSet<>();
 }

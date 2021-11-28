@@ -1,8 +1,5 @@
 package com.example.spring5recipeapp.converters;
 
-import com.example.spring5recipeapp.command.CategoryCommand;
-import com.example.spring5recipeapp.command.IngredientCommand;
-import com.example.spring5recipeapp.command.NotesCommand;
 import com.example.spring5recipeapp.command.RecipeCommand;
 import com.example.spring5recipeapp.domain.*;
 import lombok.Synchronized;
@@ -10,10 +7,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashSet;
-import java.util.Set;
 
 @Component
 public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
@@ -43,19 +37,20 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
         command.setPrepTime(source.getPrepTime());
         command.setCookTime(source.getCookTime());
         command.setServings(source.getServings());
+        command.setSource(source.getSource());
         command.setUrl(source.getUrl());
         command.setDirections(source.getDirections());
-        command.setIngredientCommands(new HashSet<>());
+        command.setIngredients(new HashSet<>());
 
         for (Ingredient ingredient : source.getIngredients()) {
-            command.getIngredientCommands().add(ingredientConverter.convert(ingredient));
+            command.getIngredients().add(ingredientConverter.convert(ingredient));
         }
         command.setImage(source.getImage());
         command.setDifficulty(source.getDifficulty());
-        command.setNotesCommand(notesConverter.convert(source.getNotes()));
-        command.setCategoryCommands(new HashSet<>());
+        command.setNotes(notesConverter.convert(source.getNotes()));
+        command.setCategory(new HashSet<>());
         for (Category category : source.getCategories()) {
-            command.getCategoryCommands().add(categoryConverter.convert(category));
+            command.getCategory().add(categoryConverter.convert(category));
         }
 
 

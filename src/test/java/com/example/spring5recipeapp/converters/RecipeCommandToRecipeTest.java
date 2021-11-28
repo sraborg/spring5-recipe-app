@@ -18,7 +18,6 @@ import java.util.Set;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.lenient;
 
@@ -43,6 +42,7 @@ class RecipeCommandToRecipeTest {
     private final Integer PREP_TIME = 1;
     private final Integer COOK_Time = 2;
     private final Integer SERVINGS = 3;
+    private final String SOURCE = "source";
     private final String URL = "url";
     private final String DIRECTIONS = "directions";
     private final Set<IngredientCommand> INGREDIENT_COMMANDS = new HashSet<>();
@@ -71,13 +71,14 @@ class RecipeCommandToRecipeTest {
         command.setPrepTime(PREP_TIME);
         command.setCookTime(COOK_Time);
         command.setServings(SERVINGS);
+        command.setSource(SOURCE);
         command.setUrl(URL);
         command.setDirections(DIRECTIONS);
-        command.setIngredientCommands(INGREDIENT_COMMANDS);
+        command.setIngredients(INGREDIENT_COMMANDS);
         command.setImage(IMAGE);
         command.setDifficulty(DIFFICULTY);
-        command.setNotesCommand(NOTES_COMMAND);
-        command.setCategoryCommands(CATEGORY_COMMANDS);
+        command.setNotes(NOTES_COMMAND);
+        command.setCategory(CATEGORY_COMMANDS);
 
         // When
         Recipe recipe = recipeConverter.convert(command);
@@ -89,6 +90,7 @@ class RecipeCommandToRecipeTest {
         assertThat(recipe.getPrepTime()).isEqualTo(PREP_TIME);
         assertThat(recipe.getCookTime()).isEqualTo(COOK_Time);
         assertThat(recipe.getServings()).isEqualTo(SERVINGS);
+        assertThat(recipe.getSource()).isEqualTo(SOURCE);
         assertThat(recipe.getUrl()).isEqualTo(URL);
         assertThat(recipe.getDirections()).isEqualTo(DIRECTIONS);
 

@@ -7,13 +7,11 @@ import com.example.spring5recipeapp.domain.Recipe;
 import com.example.spring5recipeapp.repositories.RecipeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class RecipeServiceIT {
@@ -48,7 +46,7 @@ class RecipeServiceIT {
         // Then
         assertThat(savedRecipeCommand.getDescription()).isEqualTo(DESCRIPTION);
         assertThat(savedRecipeCommand.getId()).isEqualTo(testRecipeCommand.getId());
-        assertThat(savedRecipeCommand.getCategoryCommands().size()).isEqualTo(testRecipeCommand.getCategoryCommands().size());
-        assertThat(savedRecipeCommand.getIngredientCommands().size()).isEqualTo(testRecipeCommand.getIngredientCommands().size());
+        assertThat(savedRecipeCommand.getCategory().size()).isEqualTo(testRecipeCommand.getCategory().size());
+        assertThat(savedRecipeCommand.getIngredients().size()).isEqualTo(testRecipeCommand.getIngredients().size());
     }
 }

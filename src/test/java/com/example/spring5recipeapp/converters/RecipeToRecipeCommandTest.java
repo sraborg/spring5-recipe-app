@@ -40,6 +40,7 @@ class RecipeToRecipeCommandTest {
     private final Integer PREP_TIME = 1;
     private final Integer COOK_Time = 2;
     private final Integer SERVINGS = 3;
+    private final String SOURCE = "source";
     private final String URL = "url";
     private final String DIRECTIONS = "directions";
     private final Set<Ingredient> INGREDIENTS = new HashSet<>();
@@ -66,6 +67,7 @@ class RecipeToRecipeCommandTest {
         recipe.setPrepTime(PREP_TIME);
         recipe.setCookTime(COOK_Time);
         recipe.setServings(SERVINGS);
+        recipe.setSource(SOURCE);
         recipe.setUrl(URL);
         recipe.setDirections(DIRECTIONS);
         recipe.setImage(IMAGE);
@@ -83,6 +85,7 @@ class RecipeToRecipeCommandTest {
         assertThat(command.getPrepTime()).isEqualTo(PREP_TIME);
         assertThat(command.getCookTime()).isEqualTo(COOK_Time);
         assertThat(command.getServings()).isEqualTo(SERVINGS);
+        assertThat(command.getSource()).isEqualTo(SOURCE);
         assertThat(command.getUrl()).isEqualTo(URL);
         assertThat(command.getDirections()).isEqualTo(DIRECTIONS);
         assertThat(command.getImage()).isEqualTo(IMAGE);
