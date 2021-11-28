@@ -1,5 +1,7 @@
 package com.example.spring5recipeapp.services;
 
+import com.example.spring5recipeapp.converters.RecipeCommandToRecipe;
+import com.example.spring5recipeapp.converters.RecipeToRecipeCommand;
 import com.example.spring5recipeapp.domain.Recipe;
 import com.example.spring5recipeapp.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,8 @@ import static org.mockito.BDDMockito.*;
 @ExtendWith(MockitoExtension.class)
 class RecipeServiceImplTest {
 
+    private RecipeToRecipeCommand recipeToRecipeCommand;
+    private RecipeCommandToRecipe recipeCommandToRecipe;
     private RecipeServiceImpl recipeService;
 
     @Mock
@@ -34,7 +38,7 @@ class RecipeServiceImplTest {
     }
     @BeforeEach
     void setUp() {
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test
