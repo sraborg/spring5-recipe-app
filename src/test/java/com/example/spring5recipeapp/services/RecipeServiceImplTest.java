@@ -91,4 +91,15 @@ class RecipeServiceImplTest {
         assertThat(returnedRecipes.size()).isEqualTo(2);
 
     }
+
+
+    @Test
+    void deleteById() {
+
+        // when
+        recipeService.deleteById(recipe_id);
+
+        // Then
+        then(recipeRepository).should().deleteById(recipe_id);
+    }
 }
