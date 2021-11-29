@@ -21,7 +21,7 @@ public class RecipeController {
         return "/recipe/show";
     }
 
-    @GetMapping("/recipe/{id}/new")
+    @GetMapping("/recipe/new")
     public String newRecipe(Model model) {
         model.addAttribute("recipe", new RecipeCommand());
 
