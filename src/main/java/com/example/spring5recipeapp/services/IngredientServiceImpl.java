@@ -1,24 +1,34 @@
 package com.example.spring5recipeapp.services;
 
 import com.example.spring5recipeapp.command.IngredientCommand;
+import com.example.spring5recipeapp.converters.IngredientCommandToIngredient;
 import com.example.spring5recipeapp.converters.IngredientToIngredientCommand;
+import com.example.spring5recipeapp.domain.Ingredient;
 import com.example.spring5recipeapp.domain.Recipe;
 import com.example.spring5recipeapp.repositories.RecipeRepository;
+import com.example.spring5recipeapp.repositories.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Slf4j
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
-    private final RecipeRepository recipeRepository;
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
+    private final IngredientCommandToIngredient ingredientCommandToIngredient;
+    private final RecipeRepository recipeRepository;
+    private final UnitOfMeasureRepository unitOfMeasureRepository;
 
-    public IngredientServiceImpl(RecipeRepository recipeRepository, IngredientToIngredientCommand ingredientToIngredientCommand) {
-        this.recipeRepository = recipeRepository;
+    public IngredientServiceImpl(IngredientToIngredientCommand ingredientToIngredientCommand,
+                                 IngredientCommandToIngredient ingredientCommandToIngredient,
+                                 RecipeRepository recipeRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
         this.ingredientToIngredientCommand = ingredientToIngredientCommand;
+        this.ingredientCommandToIngredient = ingredientCommandToIngredient;
+        this.recipeRepository = recipeRepository;
+        this.unitOfMeasureRepository = unitOfMeasureRepository;
     }
 
     @Override
@@ -45,4 +55,44 @@ public class IngredientServiceImpl implements IngredientService {
         log.error("Recipe ID not found. ID " + recipeId);
         return null;
     }
+
+    @Override
+    @Transactional
+    public IngredientCommand saveIngredientCommand(IngredientCommand command) {
+
+        Optional<Recipe> recipeOptional = recipeRepository.findById(command.getRecipeId());
+
+        if(recipeOptional.isEmpty()) {
+            log.error("Recipe Not Found for ID: " + command.getRecipeId());
+            return new IngredientCommand();
+        } else {
+            Recipe recipe = recipeOptional.get();
+
+            Optional<Ingredient> ingredientOptional = recipe
+                    .getIngredients()
+                    .stream()
+                    .filter(ingredient -> ingredient.getId().equals(command.getId()))
+                    .findFirst();
+
+            if (ingredientOptional.isPresent()) {
+                Ingredient ingredient = ingredientOptional.get();
+                ingredient.setDescription(command.getDescription());
+                ingredient.setUom(unitOfMeasureRepository
+                        .findById(command.getUom().getId())
+                        .orElseThrow(() -> new RuntimeException("UOM NOT FOUND"))); // NEED TO FIX
+            } else {
+                // Add New Ingredient
+                recipe.addIngredient(ingredientCommandToIngredient.convert(command));
+            }
+
+            Recipe savedRecipe = recipeRepository.save(recipe);
+
+            // To Do Check for Fail
+            return ingredientToIngredientCommand.convert(savedRecipe.getIngredients().stream()
+            .filter(recipeIngredient -> recipeIngredient.getId().equals(command.getId()))
+            .findFirst().orElseThrow(RuntimeException::new));
+        }
+    }
+
+
 }

@@ -1,11 +1,14 @@
 package com.example.spring5recipeapp.services;
 
 import com.example.spring5recipeapp.command.IngredientCommand;
+import com.example.spring5recipeapp.converters.IngredientCommandToIngredient;
 import com.example.spring5recipeapp.converters.IngredientToIngredientCommand;
+import com.example.spring5recipeapp.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import com.example.spring5recipeapp.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import com.example.spring5recipeapp.domain.Ingredient;
 import com.example.spring5recipeapp.domain.Recipe;
 import com.example.spring5recipeapp.repositories.RecipeRepository;
+import com.example.spring5recipeapp.repositories.UnitOfMeasureRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,15 +27,21 @@ class IngredientServiceImplTest {
     @Mock
     private RecipeRepository recipeRepository;
 
-    private IngredientToIngredientCommand ingredientToIngredientCommand;
+    @Mock
+    private UnitOfMeasureRepository unitOfMeasureRepository;
+
+    private IngredientToIngredientCommand ingredientToIngredientCommand = new IngredientToIngredientCommand(
+            new UnitOfMeasureToUnitOfMeasureCommand());;
+    private IngredientCommandToIngredient ingredientCommandToIngredient = new IngredientCommandToIngredient(
+            new UnitOfMeasureCommandToUnitOfMeasure());
 
     private IngredientService ingredientService;
 
 
     @BeforeEach
     void setUp() {
-        ingredientToIngredientCommand = new IngredientToIngredientCommand(new UnitOfMeasureToUnitOfMeasureCommand());
-        ingredientService = new IngredientServiceImpl(recipeRepository, ingredientToIngredientCommand);
+        ingredientService = new IngredientServiceImpl(ingredientToIngredientCommand, ingredientCommandToIngredient,
+                recipeRepository, unitOfMeasureRepository);
     }
 
     private final Long RECIPE_ID = 1L;
@@ -65,10 +74,9 @@ class IngredientServiceImplTest {
 
         // Then
         assertThat(ingredientCommand.getId()).isEqualTo(INGREDIENT_ID);
-        assertThat(ingredientCommand.getRecipe_id()).isEqualTo(RECIPE_ID);
+        assertThat(ingredientCommand.getRecipeId()).isEqualTo(RECIPE_ID);
         then(recipeRepository).should().findById(RECIPE_ID);
 
-
-
     }
+
 }

@@ -4,7 +4,9 @@ import com.example.spring5recipeapp.command.IngredientCommand;
 
 public interface IngredientService {
 
-    IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId);
+    public IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId);
+
+    public IngredientCommand saveIngredientCommand(IngredientCommand command);
 
 
 }
