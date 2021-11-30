@@ -62,6 +62,7 @@ public class IngredientServiceImpl implements IngredientService {
 
         Optional<Recipe> recipeOptional = recipeRepository.findById(command.getRecipeId());
 
+        // Make sure the recipe exists
         if(recipeOptional.isEmpty()) {
             log.error("Recipe Not Found for ID: " + command.getRecipeId());
             return new IngredientCommand();
@@ -74,6 +75,7 @@ public class IngredientServiceImpl implements IngredientService {
                     .filter(ingredient -> ingredient.getId().equals(command.getId()))
                     .findFirst();
 
+            // Update Ingredient if it already exists
             if (ingredientOptional.isPresent()) {
                 Ingredient ingredient = ingredientOptional.get();
                 ingredient.setDescription(command.getDescription());
@@ -81,16 +83,33 @@ public class IngredientServiceImpl implements IngredientService {
                         .findById(command.getUom().getId())
                         .orElseThrow(() -> new RuntimeException("UOM NOT FOUND"))); // NEED TO FIX
             } else {
-                // Add New Ingredient
-                recipe.addIngredient(ingredientCommandToIngredient.convert(command));
+                // Create New Ingredient if it doesn't already exist
+                Ingredient ingredient = ingredientCommandToIngredient.convert(command);
+                ingredient.setRecipe(recipe);
+                recipe.addIngredient(ingredient);
             }
 
             Recipe savedRecipe = recipeRepository.save(recipe);
 
-            // To Do Check for Fail
-            return ingredientToIngredientCommand.convert(savedRecipe.getIngredients().stream()
-            .filter(recipeIngredient -> recipeIngredient.getId().equals(command.getId()))
-            .findFirst().orElseThrow(RuntimeException::new));
+            Optional<Ingredient> savedIngredientOptional = savedRecipe.getIngredients().stream()
+                    .filter(recipeIngredient -> recipeIngredient.getId().equals(command.getId()))
+                    .findFirst();
+
+            // Check by description
+            if (savedIngredientOptional.isEmpty()) {
+                // Not safe
+                savedIngredientOptional = savedRecipe.getIngredients().stream()
+                        .filter(recipeIngredient -> recipeIngredient.getDescription().equals(command.getDescription()))
+                        .filter(recipeIngredient -> recipeIngredient.getAmount().equals(command.getAmount()))
+                        .filter(recipeIngredient -> recipeIngredient.getUom().getId().equals(command.getUom().getId()))
+                        .findFirst();
+            }
+
+            // todo Check for Fail
+            return ingredientToIngredientCommand.convert(savedIngredientOptional.get());
+//            return ingredientToIngredientCommand.convert(savedRecipe.getIngredients().stream()
+//            .filter(recipeIngredient -> recipeIngredient.getId().equals(command.getId()))
+//            .findFirst().orElseThrow(RuntimeException::new));
         }
     }
 

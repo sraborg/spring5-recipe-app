@@ -1,6 +1,8 @@
 package com.example.spring5recipeapp.controllers;
 
 import com.example.spring5recipeapp.command.IngredientCommand;
+import com.example.spring5recipeapp.command.RecipeCommand;
+import com.example.spring5recipeapp.command.UnitOfMeasureCommand;
 import com.example.spring5recipeapp.services.IngredientService;
 import com.example.spring5recipeapp.services.RecipeService;
 import com.example.spring5recipeapp.services.UnitOfMeasureService;
@@ -60,5 +62,23 @@ public class IngredientController {
         log.debug("Saved Ingredient ID: " + savedCommand.getId());
 
         return "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredient/" + savedCommand.getId() + "/show";
+    }
+
+    @GetMapping("/recipe/{recipeId}/ingredient/new")
+    public String newRecipe(@PathVariable Long recipeId, Model model) {
+
+        // Check for valid Id
+        RecipeCommand command = recipeService.findCommandById(recipeId);
+        // todo raise exception if null
+
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(recipeId);
+
+        model.addAttribute("ingredient", ingredientCommand);
+
+        ingredientCommand.setUom(new UnitOfMeasureCommand());
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+
+        return "recipe/ingredient/ingredientform";
     }
 }
