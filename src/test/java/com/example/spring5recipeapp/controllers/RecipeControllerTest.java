@@ -101,4 +101,5 @@ class RecipeControllerTest {
         then(recipeService).should().deleteById(1L);
 
     }
+
 }

@@ -15,6 +15,31 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous" th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+
+    <script>
+        function deleteIngredient(recipeId, ingredientId) {
+            url = "/recipe/" + recipeId + "/ingredient/" + ingredientId + "/delete";
+
+            // Create an XMLHttpRequest object
+            const xhttp = new XMLHttpRequest();
+
+            // Define a callback function
+            xhttp.onload = function() {
+
+              if (this.status=200) {
+                // Simulate the redirect via JavaScript
+                window.location.replace(this.responseURL);
+              } else {
+                console.log("An error occurred: " + this.status);
+              }
+            }
+
+            // Send th delete request
+            console.log("Sending delete request: " + url);
+            xhttp.open("DELETE", url, false);
+            xhttp.send();
+        }
+    </script>
 </head>
 <body>
 <!--/*@thymesVar id="recipe" type="guru.springframework.domain.Recipe"*/-->
@@ -59,7 +84,7 @@
                                 <td th:text="${ingredient.amount} + ' ' + ${ingredient.uom.getDescription()} + ' ' + ${ingredient.description} + '/show'">Tasty Goodnees 3</td>
                                 <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/show'}">View</a></td>
                                 <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/update'}">Update</a></td>
-                                <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/delete'}">Delete</a></td>
+                                <td><a href="#" th:attr="onclick=|deleteIngredient(${recipe.id},${ingredient.id}); return false;|">Delete</a></td>
                             </tr>
                         </table>
                     </div>

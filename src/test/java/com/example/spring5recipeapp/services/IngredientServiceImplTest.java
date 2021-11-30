@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -79,4 +80,26 @@ class IngredientServiceImplTest {
 
     }
 
+    @Test
+    void testDeleteById() {
+        Recipe recipe = new Recipe();
+        recipe.setId(RECIPE_ID);
+        Ingredient ingredient = new Ingredient();
+        ingredient.setId(INGREDIENT_ID);
+
+        recipe.addIngredient(ingredient);
+        ingredient.setRecipe(recipe);
+
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        given(recipeRepository.findById(RECIPE_ID)).willReturn(recipeOptional);
+
+        // When
+        ingredientService.deleteById(RECIPE_ID, INGREDIENT_ID);
+
+        // Then
+        then(recipeRepository).should().findById(RECIPE_ID);
+        then(recipeRepository).should().save(any(Recipe.class));
+
+    }
 }
