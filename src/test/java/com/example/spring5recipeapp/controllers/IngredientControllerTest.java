@@ -2,8 +2,6 @@ package com.example.spring5recipeapp.controllers;
 
 import com.example.spring5recipeapp.command.IngredientCommand;
 import com.example.spring5recipeapp.command.RecipeCommand;
-import com.example.spring5recipeapp.domain.Ingredient;
-import com.example.spring5recipeapp.domain.Recipe;
 import com.example.spring5recipeapp.repositories.RecipeRepository;
 import com.example.spring5recipeapp.services.IngredientService;
 import com.example.spring5recipeapp.services.RecipeService;
@@ -19,13 +17,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.HashSet;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -70,11 +66,12 @@ class IngredientControllerTest {
         // Given
         given(recipeService.findCommandById(RECIPE_ID)).willReturn(recipeCommand);
 
-        // When - Then
+        // When
         mockMvc.perform(get("/recipe/1/ingredients"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("recipe/ingredient/list"))
-                .andExpect(model().attributeExists("recipe"));
+            // Then
+            .andExpect(status().isOk())
+            .andExpect(view().name("recipe/ingredient/list"))
+            .andExpect(model().attributeExists("recipe"));
 
         then(recipeService).should().findCommandById(RECIPE_ID);
 
