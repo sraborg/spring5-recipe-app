@@ -65,6 +65,16 @@ class RecipeControllerTest {
     }
 
     @Test
+    void testGetRecipeNotFound() throws Exception {
+
+        given(recipeService.findById(RECIPE_ID)).willThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404error"));
+    }
+
+    @Test
     void testGetNewRecipeForm() throws Exception{
 
         mockMvc.perform(get("/recipe/new"))
@@ -108,4 +118,6 @@ class RecipeControllerTest {
         then(recipeService).should().deleteById(1L);
 
     }
+
+
 }
