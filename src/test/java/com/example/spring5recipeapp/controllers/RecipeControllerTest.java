@@ -2,17 +2,24 @@ package com.example.spring5recipeapp.controllers;
 
 import com.example.spring5recipeapp.command.RecipeCommand;
 import com.example.spring5recipeapp.domain.Recipe;
+import com.example.spring5recipeapp.exceptions.NotFoundException;
+import com.example.spring5recipeapp.repositories.RecipeRepository;
 import com.example.spring5recipeapp.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,12 +37,12 @@ class RecipeControllerTest {
 
     private final RecipeCommand recipeCommand;
     private final Recipe recipe;
-    private final Long recipe_id = 1L;
+    private final Long RECIPE_ID = 1L;
     {
         recipeCommand = new RecipeCommand();
-        recipeCommand.setId(recipe_id);
+        recipeCommand.setId(RECIPE_ID);
         recipe = new Recipe();
-        recipe.setId(recipe_id);
+        recipe.setId(RECIPE_ID);
     }
     @BeforeEach
     void setUp() {
@@ -49,7 +56,7 @@ class RecipeControllerTest {
     @Test
     void testGetRecipe() throws Exception {
 
-        given(recipeService.findById(recipe_id)).willReturn(recipe);
+        given(recipeService.findById(RECIPE_ID)).willReturn(recipe);
 
         mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(status().isOk())
@@ -77,13 +84,13 @@ class RecipeControllerTest {
                 .param("description", "some string")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/recipe/"+recipe_id+"/show/"));
+                .andExpect(view().name("redirect:/recipe/"+ RECIPE_ID +"/show/"));
     }
 
     @Test
     void testGetUpdateView() throws Exception {
 
-        given(recipeService.findCommandById(recipe_id)).willReturn(recipeCommand);
+        given(recipeService.findCommandById(RECIPE_ID)).willReturn(recipeCommand);
 
         mockMvc.perform(get("/recipe/1/update"))
                 .andExpect(status().isOk())
@@ -101,5 +108,4 @@ class RecipeControllerTest {
         then(recipeService).should().deleteById(1L);
 
     }
-
 }

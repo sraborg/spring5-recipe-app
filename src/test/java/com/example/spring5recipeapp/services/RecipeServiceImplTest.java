@@ -3,6 +3,7 @@ package com.example.spring5recipeapp.services;
 import com.example.spring5recipeapp.converters.RecipeCommandToRecipe;
 import com.example.spring5recipeapp.converters.RecipeToRecipeCommand;
 import com.example.spring5recipeapp.domain.Recipe;
+import com.example.spring5recipeapp.exceptions.NotFoundException;
 import com.example.spring5recipeapp.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,12 +30,12 @@ class RecipeServiceImplTest {
     private RecipeRepository recipeRepository;
 
     private final Recipe recipe;
-    private final Long recipe_id = 1L;
+    private final Long RECIPE_ID = 1L;
 
     // Static block to initialize recipe
     {
        recipe = new Recipe();
-       recipe.setId(recipe_id);
+       recipe.setId(RECIPE_ID);
     }
     @BeforeEach
     void setUp() {
@@ -45,29 +46,27 @@ class RecipeServiceImplTest {
     void getRecipeById() throws Exception {
 
         // Given
-        given(recipeRepository.findById(recipe_id)).willReturn(Optional.of(recipe));
+        given(recipeRepository.findById(RECIPE_ID)).willReturn(Optional.of(recipe));
 
         // When
-        Recipe returnedRecipe = recipeService.findById(recipe_id);
+        Recipe returnedRecipe = recipeService.findById(RECIPE_ID);
 
         // Then
-        then(recipeRepository).should().findById(recipe_id);
+        then(recipeRepository).should().findById(RECIPE_ID);
         assertNotNull(returnedRecipe);
 
     }
 
     @Test
-    void getRecipeByIdNotFound() throws Exception {
+    public void getRecipeByIdTestNotFound() throws Exception {
 
         // Given
-        given(recipeRepository.findById(recipe_id)).willReturn(Optional.empty());
+        Optional<Recipe> recipeOptional = Optional.empty();
+        given(recipeRepository.findById(anyLong())).willReturn(recipeOptional);
 
-        // When
-        Recipe returnedRecipe = recipeService.findById(recipe_id);
+        // Then - Should throw exception
+        assertThrows(NotFoundException.class, () -> recipeService.findById(RECIPE_ID));
 
-        // Then
-        then(recipeRepository).should().findById(recipe_id);
-        assertNull(returnedRecipe);
     }
 
     @Test
@@ -97,9 +96,9 @@ class RecipeServiceImplTest {
     void deleteById() {
 
         // when
-        recipeService.deleteById(recipe_id);
+        recipeService.deleteById(RECIPE_ID);
 
         // Then
-        then(recipeRepository).should().deleteById(recipe_id);
+        then(recipeRepository).should().deleteById(RECIPE_ID);
     }
 }
